@@ -1,7 +1,5 @@
+
 import React, { useState, useEffect } from 'react';
-import { toast } from '@/components/ui/use-toast';
-import { Check } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { 
   directions, 
   offices, 
@@ -27,6 +25,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({ onSubmit, onCancel })
   const [availableDates, setAvailableDates] = useState<string[]>([]);
   const [availableTimes, setAvailableTimes] = useState<string[]>([]);
   
+  // Generate available dates (next 7 days)
   useEffect(() => {
     const dates: string[] = [];
     const today = new Date();
@@ -45,10 +44,12 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({ onSubmit, onCancel })
     setAvailableDates(dates);
   }, []);
   
+  // Filter offices by organization
   const filteredOffices = selectedOrgId 
     ? offices.filter(office => office.organizationId === selectedOrgId) 
     : [];
   
+  // Update available times when office and date change
   useEffect(() => {
     if (formData.officeId && formData.date) {
       const slots = getAvailableTimeSlots(formData.officeId, formData.date);
@@ -63,7 +64,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({ onSubmit, onCancel })
     
     if (name === 'organizationId') {
       setSelectedOrgId(value);
-      setFormData(prev => ({ ...prev, officeId: '' }));
+      setFormData(prev => ({ ...prev, officeId: '' })); // Reset office when org changes
     } else {
       setFormData(prev => ({ ...prev, [name]: value }));
     }
@@ -72,20 +73,6 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({ onSubmit, onCancel })
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(formData);
-    
-    toast({
-      title: "Запись создана",
-      description: "Ваша запись успешно добавлена в очередь",
-      action: (
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          className="bg-green-500 text-white p-2 rounded-full"
-        >
-          <Check className="h-4 w-4" />
-        </motion.div>
-      ),
-    });
   };
   
   return (
