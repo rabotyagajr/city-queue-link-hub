@@ -11,7 +11,7 @@ import NotFound from "./pages/NotFound";
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { AnimatePresence } from "framer-motion";
 
-// Create a client outside the component
+// Create a client outside the componen
 const queryClient = new QueryClient();
 
 // Protected route component
