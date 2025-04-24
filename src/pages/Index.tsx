@@ -1,23 +1,11 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Header from '../components/Header';
 import UserInterface from '../components/UserInterface';
 import AdminInterface from '../components/AdminInterface';
 
 const Index: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'user' | 'admin-org' | 'admin-dev'>('user');
-  
-  // Load QR code library
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://unpkg.com/qrcode.react@3.1.0/lib/index.js';
-    script.async = true;
-    document.body.appendChild(script);
-    
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
   
   return (
     <div className="min-h-screen bg-gray-50">
