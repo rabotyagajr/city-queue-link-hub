@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -10,6 +9,7 @@ import Landing from "./pages/Landing";
 import NotFound from "./pages/NotFound";
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { AnimatePresence } from "framer-motion";
+import { ThemeProvider } from "./components/ThemeProvider";
 
 // Create a client outside the component
 const queryClient = new QueryClient();
@@ -48,50 +48,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   return <>{children}</>;
 };
 
-// Main App component
-function App() {
-  return (
-    <React.StrictMode>
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <AuthProvider>
-            <TooltipProvider>
-              <AnimatePresence mode="wait">
-                <Routes>
-                  {/* Landing page is available for all users */}
-                  <Route 
-                    path="/" 
-                    element={
-                      <PublicOnlyRoute>
-                        <Landing />
-                      </PublicOnlyRoute>
-                    } 
-                  />
-                  
-                  {/* Dashboard routes */}
-                  <Route 
-                    path="/dashboard" 
-                    element={
-                      <ProtectedRoute>
-                        <Index />
-                      </ProtectedRoute>
-                    } 
-                  />
-                  
-                  {/* Catch-all route */}
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </AnimatePresence>
-              <Toaster />
-              <Sonner />
-            </TooltipProvider>
-          </AuthProvider>
-        </BrowserRouter>
-      </QueryClientProvider>
-    </React.StrictMode>
-  );
-}
-
 // Component to redirect authenticated users away from public-only routes
 const PublicOnlyRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, isLoading } = useAuth();
@@ -110,5 +66,51 @@ const PublicOnlyRoute: React.FC<{ children: React.ReactNode }> = ({ children }) 
   
   return <>{children}</>;
 };
+
+// Main App component
+function App() {
+  return (
+    <React.StrictMode>
+      <ThemeProvider defaultTheme="system">
+        <QueryClientProvider client={queryClient}>
+          <BrowserRouter>
+            <AuthProvider>
+              <TooltipProvider>
+                <AnimatePresence mode="wait">
+                  <Routes>
+                    {/* Landing page is available for all users */}
+                    <Route 
+                      path="/" 
+                      element={
+                        <PublicOnlyRoute>
+                          <Landing />
+                        </PublicOnlyRoute>
+                      } 
+                    />
+                    
+                    {/* Dashboard routes */}
+                    <Route 
+                      path="/dashboard" 
+                      element={
+                        <ProtectedRoute>
+                          <Index />
+                        </ProtectedRoute>
+                      } 
+                    />
+                    
+                    {/* Catch-all route */}
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </AnimatePresence>
+                <Toaster />
+                <Sonner />
+              </TooltipProvider>
+            </AuthProvider>
+          </BrowserRouter>
+        </QueryClientProvider>
+      </ThemeProvider>
+    </React.StrictMode>
+  );
+}
 
 export default App;
