@@ -4,6 +4,8 @@ import AppointmentCard from './AppointmentCard';
 import QRCodeDisplay from './QRCodeDisplay';
 import AppointmentForm from './AppointmentForm';
 import TimeBankExchange from './TimeBankExchange';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
 import { Appointment, AppointmentFormData } from '../utils/types';
 import { appointments as initialAppointments, currentUser, generateId } from '../utils/data';
 
@@ -55,53 +57,59 @@ const UserInterface: React.FC = () => {
   const activeAppointmentsCount = userAppointments.filter(app => app.status === 'active').length;
   
   return (
-    <div className="mb-8">
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-        <h2 className="text-xl font-semibold mb-2">Добро пожаловать, {currentUser.name}</h2>
-        <p>У вас {activeAppointmentsCount} активных записей из 2 возможных.</p>
+    <div className="space-y-8">
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-100">
+        <h2 className="text-2xl font-semibold mb-2">Добро пожаловать, {currentUser.name}!</h2>
+        <p className="text-gray-600">
+          У вас {activeAppointmentsCount} активных записей из 2 возможных.
+          {activeAppointmentsCount < 2 && " Вы можете создать ещё одну запись."}
+        </p>
       </div>
       
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">Ваши записи</h2>
-        <button 
-          className="btn-primary"
-          onClick={() => setShowAppointmentForm(true)}
-          disabled={activeAppointmentsCount >= 2}
-        >
-          Получить ссылку
-        </button>
-      </div>
-      
-      {/* Appointments list */}
       <div>
-        {userAppointments.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
-            У вас пока нет записей. Нажмите "Получить ссылку", чтобы создать запись.
-          </div>
-        ) : (
-          userAppointments.map(appointment => (
-            <AppointmentCard
-              key={appointment.id}
-              appointment={appointment}
-              onViewQR={setSelectedAppointment}
-              onCancel={handleCancelAppointment}
-            />
-          ))
-        )}
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-semibold">Ваши записи</h2>
+          <Button
+            onClick={() => setShowAppointmentForm(true)}
+            disabled={activeAppointmentsCount >= 2}
+            className="gap-2"
+          >
+            <Plus className="h-4 w-4" />
+            Получить ссылку
+          </Button>
+        </div>
+        
+        <div className="space-y-4">
+          {userAppointments.length === 0 ? (
+            <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
+              <p className="text-gray-500">
+                У вас пока нет записей. Нажмите "Получить ссылку", чтобы создать запись.
+              </p>
+            </div>
+          ) : (
+            userAppointments.map(appointment => (
+              <AppointmentCard
+                key={appointment.id}
+                appointment={appointment}
+                onViewQR={setSelectedAppointment}
+                onCancel={handleCancelAppointment}
+              />
+            ))
+          )}
+        </div>
       </div>
       
-      {/* Time bank section */}
       <TimeBankExchange
         appointments={userAppointments}
         onDonate={handleDonateAppointment}
         onViewQR={setSelectedAppointment}
       />
       
-      {/* Appointment form modal */}
+      {/* Modals */}
       {showAppointmentForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg p-6 max-w-lg w-full">
-            <h3 className="text-lg font-bold mb-4">Создание новой записи</h3>
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl p-6 max-w-lg w-full">
+            <h3 className="text-xl font-semibold mb-4">Создание новой записи</h3>
             <AppointmentForm
               onSubmit={handleCreateAppointment}
               onCancel={() => setShowAppointmentForm(false)}
@@ -110,7 +118,6 @@ const UserInterface: React.FC = () => {
         </div>
       )}
       
-      {/* QR code display modal */}
       {selectedAppointment && (
         <QRCodeDisplay
           appointment={selectedAppointment}
