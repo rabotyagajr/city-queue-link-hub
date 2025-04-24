@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '../contexts/AuthContext';
 import { motion } from 'framer-motion';
 import { User, ShieldCheck, Settings, Clock } from 'lucide-react';
+import { ThemeToggle } from './ThemeToggle';
 
 interface HeaderProps {
   activeTab: 'user' | 'admin-org' | 'admin-dev';
@@ -15,7 +16,7 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
   
   return (
     <motion.header 
-      className="bg-white border-b sticky top-0 z-50 shadow-sm"
+      className="bg-background border-b sticky top-0 z-50 shadow-sm"
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
@@ -32,37 +33,40 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
             Городской тайм-банк
           </motion.h1>
           
-          <nav className="flex flex-wrap justify-center gap-2">
-            {isAdmin ? (
-              <>
+          <div className="flex items-center gap-4">
+            <ThemeToggle />
+            <nav className="flex flex-wrap justify-center gap-2">
+              {isAdmin ? (
+                <>
+                  <Button
+                    variant={activeTab === 'admin-org' ? 'default' : 'ghost'}
+                    onClick={() => setActiveTab('admin-org')}
+                    className="min-w-[140px] gap-2"
+                  >
+                    <ShieldCheck className="h-4 w-4" />
+                    Панель организации
+                  </Button>
+                  <Button
+                    variant={activeTab === 'admin-dev' ? 'default' : 'ghost'}
+                    onClick={() => setActiveTab('admin-dev')}
+                    className="min-w-[140px] gap-2"
+                  >
+                    <Settings className="h-4 w-4" />
+                    Разработка
+                  </Button>
+                </>
+              ) : (
                 <Button
-                  variant={activeTab === 'admin-org' ? 'default' : 'ghost'}
-                  onClick={() => setActiveTab('admin-org')}
+                  variant={activeTab === 'user' ? 'default' : 'ghost'}
+                  onClick={() => setActiveTab('user')}
                   className="min-w-[140px] gap-2"
                 >
-                  <ShieldCheck className="h-4 w-4" />
-                  Панель организации
+                  <User className="h-4 w-4" />
+                  Личный кабинет
                 </Button>
-                <Button
-                  variant={activeTab === 'admin-dev' ? 'default' : 'ghost'}
-                  onClick={() => setActiveTab('admin-dev')}
-                  className="min-w-[140px] gap-2"
-                >
-                  <Settings className="h-4 w-4" />
-                  Разработка
-                </Button>
-              </>
-            ) : (
-              <Button
-                variant={activeTab === 'user' ? 'default' : 'ghost'}
-                onClick={() => setActiveTab('user')}
-                className="min-w-[140px] gap-2"
-              >
-                <User className="h-4 w-4" />
-                Личный кабинет
-              </Button>
-            )}
-          </nav>
+              )}
+            </nav>
+          </div>
         </div>
       </div>
     </motion.header>
