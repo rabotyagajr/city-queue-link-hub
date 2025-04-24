@@ -1,13 +1,12 @@
-
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { Clock, Users, Star, ArrowRight } from 'lucide-react';
-import LoginForm from '../components/LoginForm';
+import React from 'react'
+import { useNavigate } from 'react-router-dom'
+import { motion } from 'framer-motion'
+import { Button } from '@/components/ui/button'
+import { Clock, Users, Star, ArrowRight } from 'lucide-react'
+import LoginForm from '../components/LoginForm'
 
 const Landing: React.FC = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
@@ -33,11 +32,12 @@ const Landing: React.FC = () => {
               Управляйте своим временем <span className="text-primary">эффективно</span>
             </h2>
             <p className="text-lg text-gray-700 max-w-lg">
-              Городской тайм-банк помогает жителям города экономить время при получении государственных услуг без очередей и ожидания.
+              Городской тайм-банк помогает жителям города экономить время при получении государственных услуг без
+              очередей и ожидания.
             </p>
-            
+
             <div className="flex flex-wrap gap-4">
-              <Button 
+              <Button
                 size="lg"
                 className="group"
                 onClick={() => document.getElementById('login-section')?.scrollIntoView({ behavior: 'smooth' })}
@@ -46,12 +46,12 @@ const Landing: React.FC = () => {
                 <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Button>
             </div>
-            
+
             <div className="pt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
               {[
                 { icon: Clock, title: 'Экономия времени', desc: 'Бронируйте слоты заранее' },
                 { icon: Users, title: 'Обмен слотами', desc: 'Делитесь с другими пользователями' },
-                { icon: Star, title: 'Удобный сервис', desc: 'Простое управление записями' }
+                { icon: Star, title: 'Удобный сервис', desc: 'Простое управление записями' },
               ].map((feature, idx) => (
                 <motion.div
                   key={idx}
@@ -80,7 +80,7 @@ const Landing: React.FC = () => {
           >
             <h2 className="text-2xl font-semibold text-gray-900 mb-6">Вход в систему</h2>
             <LoginForm />
-            
+
             <div className="mt-8 pt-6 border-t text-sm text-gray-500">
               <p className="mb-2">Тестовые аккаунты:</p>
               <p>• Пользователь: user@test.com / 123456</p>
@@ -92,9 +92,7 @@ const Landing: React.FC = () => {
 
       <footer className="mt-20 bg-white/70 backdrop-blur-sm py-8">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <p className="text-gray-600 text-sm">
-            &copy; 2024 Городской тайм-банк. Все права защищены.
-          </p>
+          <p className="text-gray-600 text-sm">&copy; 2024 Городской тайм-банк. Все права защищены.</p>
           <div className="mt-4 space-x-4 flex justify-center">
             <a href="#" className="text-gray-600 hover:text-primary text-sm transition-colors">
               Помощь
@@ -106,14 +104,10 @@ const Landing: React.FC = () => {
               Конфиденциальность
             </a>
           </div>
-          
-          <div className="mt-6 text-xs text-gray-400">
-            Made with <a href="https://lovable.dev" className="text-primary hover:underline">Lovable</a>
-          </div>
         </div>
       </footer>
     </div>
-  );
-};
+  )
+}
 
-export default Landing;
+export default Landing

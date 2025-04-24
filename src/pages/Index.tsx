@@ -1,26 +1,26 @@
-
-import React, { useState } from 'react';
-import Header from '../components/Header';
-import UserInterface from '../components/UserInterface';
-import AdminInterface from '../components/AdminInterface';
-import { useAuth } from '../contexts/AuthContext';
-import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { Calendar, Users, Clock, LogOut } from 'lucide-react';
+import React, { useState } from 'react'
+import Header from '../components/Header'
+import UserInterface from '../components/UserInterface'
+import AdminInterface from '../components/AdminInterface'
+import { useAuth } from '../contexts/AuthContext'
+import { motion } from 'framer-motion'
+import { Button } from '@/components/ui/button'
+import { Calendar, Users, Clock, LogOut } from 'lucide-react'
+import { appointments as initialAppointments, currentUser, generateId } from '../utils/data'
 
 const Index: React.FC = () => {
-  const { user, logout } = useAuth();
+  const { user, logout } = useAuth()
   const [activeTab, setActiveTab] = useState<'user' | 'admin-org' | 'admin-dev'>(() => {
     // Set default tab based on user role
-    return user?.role === 'admin' ? 'admin-org' : 'user';
-  });
-  
+    return user?.role === 'admin' ? 'admin-org' : 'user'
+  })
+
   const handleLogout = () => {
-    logout();
-  };
-  
+    logout()
+  }
+
   return (
-    <motion.div 
+    <motion.div
       className="min-h-screen bg-gradient-to-b from-white to-gray-50"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -29,18 +29,16 @@ const Index: React.FC = () => {
     >
       <div className="bg-primary/5 py-2 px-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="text-sm text-gray-600">
-            Добро пожаловать, {user?.name || 'Пользователь'}!
-          </div>
+          <div className="text-sm text-gray-600">Добро пожаловать, {currentUser?.name || 'Пользователь'}!</div>
           <Button variant="ghost" size="sm" onClick={handleLogout} className="text-gray-600 gap-1">
             <LogOut className="h-4 w-4" />
             Выйти
           </Button>
         </div>
       </div>
-      
+
       <Header activeTab={activeTab} setActiveTab={setActiveTab} />
-      
+
       <div className="app-container py-8">
         {activeTab === 'user' ? (
           <div className="max-w-5xl mx-auto">
@@ -62,7 +60,7 @@ const Index: React.FC = () => {
                   </div>
                 </div>
               </motion.div>
-              
+
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -79,7 +77,7 @@ const Index: React.FC = () => {
                   </div>
                 </div>
               </motion.div>
-              
+
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -97,7 +95,7 @@ const Index: React.FC = () => {
                 </div>
               </motion.div>
             </div>
-            
+
             <UserInterface />
           </div>
         ) : (
@@ -106,13 +104,11 @@ const Index: React.FC = () => {
           </div>
         )}
       </div>
-      
+
       {/* Footer */}
       <footer className="bg-white border-t mt-auto py-8">
         <div className="app-container text-center">
-          <p className="text-gray-600 text-sm">
-            &copy; 2024 Городской тайм-банк. Все права защищены.
-          </p>
+          <p className="text-gray-600 text-sm">&copy; 2024 Городской тайм-банк. Все права защищены.</p>
           <div className="mt-4 space-x-4">
             <a href="#" className="text-gray-600 hover:text-primary text-sm transition-colors">
               Помощь
@@ -127,7 +123,7 @@ const Index: React.FC = () => {
         </div>
       </footer>
     </motion.div>
-  );
-};
+  )
+}
 
-export default Index;
+export default Index
