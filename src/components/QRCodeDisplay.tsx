@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react'
 import { QRCodeSVG } from 'qrcode.react'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
+import 'leaflet-routing-machine/dist/leaflet-routing-machine.css'
+import 'leaflet-routing-machine'
+import domtoimage from 'dom-to-image'
 import { Appointment } from '../utils/types'
 import { getOfficeById, currentUser } from '../utils/data'
 
@@ -35,6 +38,36 @@ const QRCodeDisplay: React.FC<QRCodeDisplayProps> = ({ appointment, onClose }) =
 
   const handleCloseMap = () => {
     setShowMap(false)
+  }
+
+  const handleSaveQRCode = () => {
+    const qrElement = document.getElementById('qr-code')
+    
+    if (!qrElement) {
+      console.error('QR code element not found')
+      return
+    }
+
+    // Ensure the element is visible and has proper dimensions
+    qrElement.style.backgroundColor = 'white'
+    qrElement.style.padding = '10px'
+
+    domtoimage
+      .toPng(qrElement, {
+        quality: 1,
+        bgcolor: '#ffffff',
+        width: qrElement.offsetWidth,
+        height: qrElement.offsetHeight,
+      })
+      .then((dataUrl) => {
+        const link = document.createElement('a')
+        link.download = `appointment_${appointment.id}_qrcode.png`
+        link.href = dataUrl
+        link.click()
+      })
+      .catch((error) => {
+        console.error('Ошибка сохранения QR-кода:', error)
+      })
   }
 
   useEffect(() => {
@@ -113,52 +146,44 @@ const QRCodeDisplay: React.FC<QRCodeDisplayProps> = ({ appointment, onClose }) =
       const finalUserIcon = userIcon.options.iconUrl ? userIcon : fallbackUserIcon
       const finalOfficeIcon = officeIcon.options.iconUrl ? officeIcon : fallbackOfficeIcon
 
-      let userMarker, officeMarker
-      setTimeout(() => {
-        userMarker = L.marker(userCoords, { icon: finalUserIcon }).addTo(map).bindPopup('Ваше местоположение')
-        if (userMarker._icon) {
-          userMarker._icon.style.transform = 'scale(1)'
-          userMarker._icon.style.zIndex = '1000'
-        }
-        userMarker.openPopup()
-      }, 500)
-
-      setTimeout(() => {
-        officeMarker = L.marker(officeCoords, { icon: finalOfficeIcon })
-          .addTo(map)
-          .bindPopup(office?.name || 'Офис')
-        if (officeMarker._icon) {
-          officeMarker._icon.style.transform = 'scale(1)'
-          officeMarker._icon.style.zIndex = '1000'
-        }
-      }, 1000)
-
-      const route = L.polyline([], {
-        color: 'blue',
-        weight: 4,
-        opacity: 0.8,
-        className: 'animate-pulse',
+      const routingControl = L.Routing.control({
+        waypoints: [
+          L.latLng(userCoords[0], userCoords[1]),
+          L.latLng(officeCoords[0], officeCoords[1])
+        ],
+        router: L.Routing.osrmv1({
+          serviceUrl: 'https://router.project-osrm.org/route/v1'
+        }),
+        lineOptions: {
+          styles: [{ color: 'blue', weight: 4, opacity: 0.8 }],
+          extendToWaypoints: true,
+          missingRouteTolerance: 100
+        },
+        createMarker: (i: number, waypoint: any, n: number) => {
+          const icon = i === 0 ? finalUserIcon : finalOfficeIcon
+          const popupText = i === 0 ? 'Ваше местоположение' : (office?.name || 'Офис')
+          const marker = L.marker(waypoint.latLng, { icon })
+          setTimeout(() => {
+            if (marker._icon) {
+              marker._icon.style.transform = 'scale(1)'
+              marker._icon.style.zIndex = '1000'
+            }
+            if (i === 0) marker.openPopup()
+          }, 500 + i * 500)
+          return marker.bindPopup(popupText)
+        },
+        show: false,
+        addWaypoints: false,
+        fitSelectedRoutes: true,
+        showAlternatives: false
       }).addTo(map)
-
-      let progress = 0
-      const animateRoute = () => {
-        progress += 0.015
-        if (progress <= 1) {
-          const lat = userCoords[0] + (officeCoords[0] - userCoords[0]) * progress
-          const lng = userCoords[1] + (officeCoords[1] - userCoords[1]) * progress
-          route.setLatLngs([userCoords, [lat, lng]])
-          requestAnimationFrame(animateRoute)
-        } else {
-          route.setLatLngs([userCoords, officeCoords])
-        }
-      }
-      setTimeout(() => requestAnimationFrame(animateRoute), 1500)
 
       setTimeout(() => {
         map.fitBounds([userCoords, officeCoords], { animate: true, duration: 1 })
       }, 2000)
 
       return () => {
+        routingControl.remove()
         map.remove()
       }
     }
@@ -187,7 +212,9 @@ const QRCodeDisplay: React.FC<QRCodeDisplayProps> = ({ appointment, onClose }) =
               className="absolute w-full h-full flex flex-col items-center justify-center bg-white"
               style={{ backfaceVisibility: 'hidden' }}
             >
-              <QRCodeSVG value={qrCodeValue} size={200} />
+              <div id="qr-code">
+                <QRCodeSVG value={qrCodeValue} size={200} />
+              </div>
               <p className="mt-2 text-sm text-gray-500">Нажмите для просмотра деталей</p>
             </div>
 
@@ -215,7 +242,7 @@ const QRCodeDisplay: React.FC<QRCodeDisplayProps> = ({ appointment, onClose }) =
         <div className="mt-6 flex flex-col gap-2">
           <button
             className="flex items-center justify-center gap-2 border-2 border-blue-500 text-blue-500 bg-white px-4 py-2 rounded-md hover:bg-blue-500 hover:text-white transition-all duration-200 hover:scale-105 focus:ring-2 focus:ring-blue-300"
-            onClick={() => alert('QR-код сохранен')}
+            onClick={handleSaveQRCode}
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
@@ -297,12 +324,8 @@ const styles = `
       opacity: 1;
     }
   }
-  .animate-pulse {
-    animation: pulse 1.5s infinite ease-in-out;
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: 0.8; }
-    50% { opacity: 0.4; }
+  .leaflet-routing-container {
+    display: none;
   }
   .custom-icon-user, .custom-icon-office {
     margin: 0 !important;
@@ -313,6 +336,11 @@ const styles = `
   }
   #map {
     z-index: 10 !important;
+  }
+  #qr-code {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 `
 
