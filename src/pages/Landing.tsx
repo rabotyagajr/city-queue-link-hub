@@ -99,6 +99,7 @@ const Landing: React.FC = () => {
                 <p className="mb-2">Тестовые аккаунты:</p>
                 <p>• Пользователь: user@test.com / 123456</p>
                 <p>• Администратор: admin@test.com / admin123</p>
+                <p>• Панель сотрудника-офиса: staff@test.com /  staff123</p>
               </div>
             )}
           </motion.div>
