@@ -71,7 +71,7 @@ const UserInterface: React.FC = () => {
         <div className="space-y-4">
           {userAppointments.length === 0 ? (
             <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
-              <p className="text-gray-500">У вас пока нет записей. Нажми��е "Получить ссылку", чтобы создать запись.</p>
+              <p className="text-gray-500">У вас пока нет записей. Нажмите "Получить ссылку", чтобы создать запись.</p>
             </div>
           ) : (
             userAppointments.map((appointment) => (
