@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react'
 import Header from '../components/Header'
 import UserInterface from '../components/UserInterface'
@@ -29,11 +30,16 @@ const Index: React.FC = () => {
       transition={{ duration: 0.3 }}
     >
       <div className="bg-primary/5 dark:bg-primary/10 py-2 px-4">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
           <div className="text-sm text-gray-600 dark:text-gray-400">
             Добро пожаловать, {user?.name || 'Пользователь'}!
           </div>
-          <Button variant="ghost" size="sm" onClick={logout} className="text-gray-600 dark:text-gray-400 gap-1">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={logout} 
+            className="w-full sm:w-auto text-gray-600 dark:text-gray-400 gap-1"
+          >
             <LogOut className="h-4 w-4" />
             Выйти
           </Button>
@@ -42,7 +48,7 @@ const Index: React.FC = () => {
 
       <Header activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      <div className="app-container py-8">
+      <div className="app-container py-4 md:py-8">
         {activeTab === 'user' && <UserInterface />}
         {activeTab === 'staff' && <StaffInterface />}
         {(activeTab === 'admin-org' || activeTab === 'admin-dev') && (
@@ -50,17 +56,17 @@ const Index: React.FC = () => {
         )}
       </div>
 
-      <footer className="bg-white border-t mt-auto py-8">
+      <footer className="bg-white border-t mt-auto py-6 md:py-8">
         <div className="app-container text-center">
-          <p className="text-gray-600 text-sm">&copy; 2024 Городской тайм-банк. Все права защищены.</p>
-          <div className="mt-4 space-x-4">
-            <a href="#" className="text-gray-600 hover:text-primary text-sm transition-colors">
+          <p className="text-gray-600 text-xs md:text-sm">&copy; 2024 Городской тайм-банк. Все права защищены.</p>
+          <div className="mt-4 flex flex-wrap justify-center gap-4">
+            <a href="#" className="text-gray-600 hover:text-primary text-xs md:text-sm transition-colors">
               Помощь
             </a>
-            <a href="#" className="text-gray-600 hover:text-primary text-sm transition-colors">
+            <a href="#" className="text-gray-600 hover:text-primary text-xs md:text-sm transition-colors">
               Правила использования
             </a>
-            <a href="#" className="text-gray-600 hover:text-primary text-sm transition-colors">
+            <a href="#" className="text-gray-600 hover:text-primary text-xs md:text-sm transition-colors">
               Конфиденциальность
             </a>
           </div>
