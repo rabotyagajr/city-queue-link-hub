@@ -3,6 +3,7 @@ import AppointmentCard from './AppointmentCard'
 import QRCodeDisplay from './QRCodeDisplay'
 import AppointmentForm from './AppointmentForm'
 import TimeBankExchange from './TimeBankExchange'
+import ServiceSearch from './ServiceSearch'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
 import { Appointment, AppointmentFormData } from '../utils/types'
@@ -14,7 +15,6 @@ const UserInterface: React.FC = () => {
   const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null)
 
   const handleCreateAppointment = (formData: AppointmentFormData) => {
-    // Check if user has reached the limit of 2 active appointments
     const activeAppointments = appointments.filter((app) => app.userId === currentUser.id && app.status === 'active')
 
     if (activeAppointments.length >= 2) {
@@ -40,7 +40,6 @@ const UserInterface: React.FC = () => {
   }
 
   const handleDonateAppointment = (appointmentId: string) => {
-    // In a real app, this would mark the appointment as donated to the time bank
     setAppointments(appointments.map((app) => (app.id === appointmentId ? { ...app, status: 'cancelled' } : app)))
 
     alert('Запись успешно добавлена в тайм-банк для других пользователей.')
@@ -52,11 +51,8 @@ const UserInterface: React.FC = () => {
   return (
     <div className="space-y-8">
       <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-100">
-        <h2 className="text-2xl font-semibold mb-2">Добро пожаловать, {currentUser.name}!</h2>
-        <p className="text-gray-600">
-          У вас {activeAppointmentsCount} активных записей из 2 возможных.
-          {activeAppointmentsCount < 2 && ' Вы можете создать ещё одну запись.'}
-        </p>
+        <h2 className="text-2xl font-semibold mb-4">Добро пожаловать, {currentUser.name}!</h2>
+        <ServiceSearch />
       </div>
 
       <div>
@@ -75,7 +71,7 @@ const UserInterface: React.FC = () => {
         <div className="space-y-4">
           {userAppointments.length === 0 ? (
             <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
-              <p className="text-gray-500">У вас пока нет записей. Нажмите "Получить ссылку", чтобы создать запись.</p>
+              <p className="text-gray-500">У вас пока нет записей. Нажми��е "Получить ссылку", чтобы создать запись.</p>
             </div>
           ) : (
             userAppointments.map((appointment) => (
@@ -96,7 +92,6 @@ const UserInterface: React.FC = () => {
         onViewQR={setSelectedAppointment}
       />
 
-      {/* Modals */}
       {showAppointmentForm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl p-6 max-w-lg w-full">
