@@ -1,7 +1,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-type UserRole = 'admin' | 'user';
+type UserRole = 'admin' | 'user' | 'staff';
 
 interface User {
   email: string;
@@ -22,6 +22,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const USERS = [
   { email: 'admin@test.com', password: 'admin123', name: 'Администратор', role: 'admin' as UserRole },
   { email: 'user@test.com', password: '123456', name: 'Пользователь', role: 'user' as UserRole },
+  { email: 'staff@test.com', password: 'staff123', name: 'Сотрудник офиса', role: 'staff' as UserRole },
 ];
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
