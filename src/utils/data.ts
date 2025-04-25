@@ -25,6 +25,8 @@ export const offices: Office[] = [
   { id: "office4", name: "МФЦ Центральный", address: "ул. Ленина, д. 15", organizationId: "org3" },
 ];
 
+
+
 // Sample directions
 export const directions = [
   "Оформление пособия",

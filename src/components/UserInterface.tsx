@@ -52,7 +52,7 @@ const UserInterface: React.FC = () => {
     <div className="space-y-8">
       <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-100">
         <h2 className="text-2xl font-semibold mb-4">Добро пожаловать, {currentUser.name}!</h2>
-        <ServiceSearch />
+        {/* <ServiceSearch /> */}
       </div>
 
       <div>
