@@ -1,13 +1,15 @@
 
-import React from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Clock, Users, Star, ArrowRight } from 'lucide-react'
 import LoginForm from '../components/LoginForm'
+import RegistrationForm from '../components/RegistrationForm'
 
 const Landing: React.FC = () => {
   const navigate = useNavigate()
+  const [showRegistration, setShowRegistration] = useState(false)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
@@ -41,10 +43,18 @@ const Landing: React.FC = () => {
               <Button
                 size="lg"
                 className="w-full sm:w-auto group"
-                onClick={() => document.getElementById('login-section')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => setShowRegistration(false)}
               >
                 Войти в систему
                 <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="w-full sm:w-auto"
+                onClick={() => setShowRegistration(true)}
+              >
+                Зарегистрироваться
               </Button>
             </div>
 
@@ -71,22 +81,26 @@ const Landing: React.FC = () => {
             </div>
           </motion.div>
 
-          {/* Login Section */}
+          {/* Auth Section */}
           <motion.div
-            id="login-section"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
             className="bg-white rounded-2xl shadow-xl p-4 md:p-8 mx-4 sm:mx-auto max-w-md w-full lg:w-auto"
           >
-            <h2 className="text-xl md:text-2xl font-semibold text-gray-900 mb-6">Вход в систему</h2>
-            <LoginForm />
+            <h2 className="text-xl md:text-2xl font-semibold text-gray-900 mb-6">
+              {showRegistration ? "Регистрация" : "Вход в систему"}
+            </h2>
+            
+            {showRegistration ? <RegistrationForm /> : <LoginForm />}
 
-            <div className="mt-8 pt-6 border-t text-xs md:text-sm text-gray-500">
-              <p className="mb-2">Тестовые аккаунты:</p>
-              <p>• Пользователь: user@test.com / 123456</p>
-              <p>• Администратор: admin@test.com / admin123</p>
-            </div>
+            {!showRegistration && (
+              <div className="mt-8 pt-6 border-t text-xs md:text-sm text-gray-500">
+                <p className="mb-2">Тестовые аккаунты:</p>
+                <p>• Пользователь: user@test.com / 123456</p>
+                <p>• Администратор: admin@test.com / admin123</p>
+              </div>
+            )}
           </motion.div>
         </div>
       </main>
